@@ -32,8 +32,7 @@ const createScene = async function () {
 
 	const BoomBoxMesh = BoomBox.meshes[0];
 	
-	let sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
-	sixDofDragBehavior.allowMultiPointer = false;
+	var sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
 	BoomBoxMesh.addBehavior(sixDofDragBehavior);
 
 	try{
@@ -64,6 +63,5 @@ engine.runRenderLoop(function () {
 window.addEventListener("resize", function () {
     engine.resize();
 });
-
 
 })()
