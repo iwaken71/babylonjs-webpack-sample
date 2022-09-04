@@ -30,6 +30,36 @@ const createScene = async function () {
 	var BoomBox = await BABYLON.SceneLoader.ImportMeshAsync("","./assets/","BoomBox.glb",scene);
 	BoomBox.meshes[0].scaling = new BABYLON.Vector3(100,100,100);
 
+
+	try{
+        const xrHelper = await scene.createDefaultXRExperienceAsync();
+        const featuresManager = xrHelper.baseExperience.featuresManager;
+
+        // テレポーテーション移動のための床を追加
+        const ground = BABYLON.MeshBuilder.CreateGround(
+            "ground",
+            { width: 400, height: 400 }
+        );
+        ground.isVisible = false;
+
+        // テレポーテーション移動の実装
+        featuresManager.enableFeature(BABYLON.WebXRFeatureName.TELEPORTATION,
+            "latest",
+            {
+                xrInput: xrHelper.input,
+                floorMeshes: [ground],
+            }
+        );
+
+        // ハンドトラッキングの実装
+        featuresManager.enableFeature(BABYLON.WebXRFeatureName.HAND_TRACKING,
+            "latest",
+            {
+                xrInput: xrHelper.input,
+            });
+    }catch (e) {
+        console.log(e);
+    }
     return scene;
 
 }
@@ -37,7 +67,7 @@ const createScene = async function () {
 const scene = await createScene();
 
 // show inspector
-scene.debugLayer.show(); 
+//scene.debugLayer.show(); 
 
 engine.runRenderLoop(function () {
     scene.render();
