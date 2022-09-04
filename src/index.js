@@ -30,6 +30,23 @@ const createScene = async function () {
 	var BoomBox = await BABYLON.SceneLoader.ImportMeshAsync("","./assets/","BoomBox.glb",scene);
 	BoomBox.meshes[0].scaling = new BABYLON.Vector3(100,100,100);
 
+	const BoomBoxMesh = BoomBox.meshes[0];
+	
+	var sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
+	BoomBoxMesh.addBehavior(sixDofDragBehavior);
+
+	try{
+        const xrHelper = await scene.createDefaultXRExperienceAsync();
+        const featuresManager = xrHelper.baseExperience.featuresManager;
+        // ハンドトラッキングの実装
+        featuresManager.enableFeature(BABYLON.WebXRFeatureName.HAND_TRACKING,
+            "latest",
+            {
+                xrInput: xrHelper.input,
+            });
+    }catch (e) {
+        console.log(e);
+    }
     return scene;
 
 }
@@ -37,7 +54,7 @@ const createScene = async function () {
 const scene = await createScene();
 
 // show inspector
-scene.debugLayer.show(); 
+//scene.debugLayer.show(); 
 
 engine.runRenderLoop(function () {
     scene.render();
@@ -46,6 +63,5 @@ engine.runRenderLoop(function () {
 window.addEventListener("resize", function () {
     engine.resize();
 });
-
 
 })()
